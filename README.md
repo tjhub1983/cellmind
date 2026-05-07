@@ -187,6 +187,27 @@ print(rem.get_stats())
 
 ---
 
+## Temporal Memory v2.1 (NEW)
+
+> **72-hour temporal coherence for cross-session continuity**
+
+```python
+from cellmind.temporal import TemporalMemory
+
+tm = TemporalMemory()
+tm.add_record("Hello!", "user", "happy", "greeting")
+prompt = tm.build_context_prompt()  # includes identity + recent context
+```
+
+Core features:
+- **72-hour strong memory window** — conversations stay coherent
+- **Identity anchoring** — new window automatically recognized
+- **Emotion locking** — emotional state continuously tracked
+- **Auto-permanent preservation** — important content (importance>0.85) never expires
+- **Forgetting mechanism** — gradually decay after 3 days
+
+---
+
 ## Key Parameters
 
 | Parameter | Default | Description |
