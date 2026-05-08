@@ -15,7 +15,7 @@ Usage:
     fear = sc.get_fear_level()
 """
 
-from typing import Dict, Any
+from typing import Dict, Any, List, Optional
 
 
 class SCEngine:
@@ -35,30 +35,29 @@ class SCEngine:
         print(sc.get_fear_level())
     """
 
-    def __init__(self):
-        self._channels = {
+    def __init__(self) -> None:
+        self._channels: Dict[str, float] = {
             "fear": 0.0,
             "dopamine": 0.0,
             "oxytocin": 0.0,
             "endorphin": 0.0,
             "serotonin": 0.0,
         }
-        self._tick_count = 0
+        self._tick_count: int = 0
 
-    def receive_signal(self, signal: Dict[str, Any]):
+    def receive_signal(self, signal: Dict[str, Any]) -> None:
         """
         Receive a pheromone signal and update the corresponding channel.
 
         Args:
             signal: dict with keys:
                 - pheromone (str): one of fear/dopamine/oxytocin/endorphin/serotonin
-                  (also accepts: "threat" → fear, "reward" → dopamine)
+                  (also accepts: "threat" -> fear, "reward" -> dopamine)
                 - intensity (float): signal strength (0.0-1.0)
                 - metadata (dict, optional): additional context
         """
         pher = signal.get("pheromone", "fear")
         intensity = signal.get("intensity", 0.5)
-        # Map common names to channel names
         pher_map = {"threat": "fear", "reward": "dopamine", "bond": "oxytocin",
                     "relief": "endorphin", "stable": "serotonin"}
         channel = pher_map.get(pher, pher)
@@ -78,12 +77,15 @@ class SCEngine:
         }
 
     def get_fear_level(self) -> float:
+        """Get the current fear channel level (0.0-1.0)."""
         return self._channels.get("fear", 0.0)
 
     def get_dopamine_level(self) -> float:
+        """Get the current dopamine channel level (0.0-1.0)."""
         return self._channels.get("dopamine", 0.0)
 
     def get_status(self) -> Dict[str, Any]:
+        """Get the current engine status including all channel levels."""
         return {
             "tick_count": self._tick_count,
             "channels": {k: round(v, 4) for k, v in self._channels.items()},
@@ -104,21 +106,21 @@ class REMWrapper:
         stats = rem.get_stats()
     """
 
-    def __init__(self):
-        self._fragments: list = []
-        self._next_id = 1
-        self._tick_count = 0
+    def __init__(self) -> None:
+        self._fragments: List[Dict[str, Any]] = []
+        self._next_id: int = 1
+        self._tick_count: int = 0
 
     def add_memory(
         self,
         content: str,
         source: str = "cellmind",
         importance: float = 0.5,
-        tags=None,
+        tags: Optional[List[str]] = None,
     ) -> str:
         """Add a memory fragment and return its ID."""
         tags = tags or []
-        frag = {
+        frag: Dict[str, Any] = {
             "id": f"frag_{self._next_id}",
             "content": content,
             "source": source,
@@ -130,9 +132,14 @@ class REMWrapper:
         self._next_id += 1
         return frag["id"]
 
-    def search(self, query: str = None, tag: str = None, min_importance: float = 0.0) -> list:
+    def search(
+        self,
+        query: Optional[str] = None,
+        tag: Optional[str] = None,
+        min_importance: float = 0.0,
+    ) -> List[Dict[str, Any]]:
         """Search fragments by content keyword, tag, or minimum importance."""
-        results = []
+        results: List[Dict[str, Any]] = []
         for f in self._fragments:
             if f["importance"] < min_importance:
                 continue
@@ -147,6 +154,7 @@ class REMWrapper:
         return sorted(results, key=lambda x: x["importance"], reverse=True)
 
     def get_stats(self) -> Dict[str, Any]:
+        """Get fragment statistics."""
         total = len(self._fragments)
         avg_imp = sum(f["importance"] for f in self._fragments) / total if total > 0 else 0
         return {
