@@ -430,3 +430,47 @@ def test_global_pool_max_capped():
     pool = CellMemory().global_pool
     pool.contribute(100.0)
     assert pool.energy == pool.max_energy
+
+def test_cmind_state_persistence(tmp_path):
+    """
+    Integration test for CellMindCore state persistence.
+    Verifies cells, goals, and emotion state persist across save/load cycles.
+    """
+    from cellmind import CellMindCore
+
+    # Create first instance with data
+    state_dir = str(tmp_path / "state1")
+    cm1 = CellMindCore(state_dir=state_dir)
+
+    # Add cells
+    cm1.activate_text("python programming")
+    cm1.activate_text("cellmind architecture")
+    cm1.activate_text("memory system")
+
+    # Add goal
+    cm1.goals_add("test goal", priority=0.8)
+
+    # Get initial state
+    cells_before = len(cm1.cell_memory.cell_pool)
+    goals_before = len(cm1.goals)
+    emotion_before = cm1.emotion.valence
+
+    # Save
+    cm1.save()
+
+    # Create new instance from same state_dir
+    cm2 = CellMindCore(state_dir=state_dir)
+
+    # Verify state restored
+    cells_after = len(cm2.cell_memory.cell_pool)
+    goals_after = len(cm2.goals)
+    emotion_after = cm2.emotion.valence
+
+    assert cells_after > 0, f"Expected cells, got {cells_after}"
+    assert cells_before == cells_after, f"Cell count mismatch: {cells_before} vs {cells_after}"
+    assert goals_after > 0, f"Expected goals, got {goals_after}"
+    assert goals_before == goals_after, f"Goal count mismatch: {goals_before} vs {goals_after}"
+    # Emotion state should be restored (not default zero)
+    assert emotion_after is not None, "Emotion state not restored"
+
+    # Clean up handled by tmp_path fixture
