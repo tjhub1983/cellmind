@@ -2,56 +2,131 @@
 
 Thank you for your interest in contributing to CellMind.
 
-## How to Contribute
+## What is CellMind?
 
-### Reporting Bugs
+CellMind is a biological cell-based AI memory architecture with:
+- Hebbian learning mechanisms
+- Emotional state systems
+- REM-like memory consolidation
+- Temporal coherence memory loops
 
-Open an issue at https://github.com/cellmind-team/cellmind with:
-- Clear title describing the bug
-- Steps to reproduce
-- Expected vs actual behavior
-- Python version and CellMind version
+## Prerequisites
 
-### Suggesting Features
+- **Python 3.8+**
+- **pip** (comes with Python)
+- **Git** (for cloning and branching)
 
-Open an issue with tag `enhancement`. Describe:
-- The problem you're solving
-- How your proposed feature addresses it
-- Any relevant context or references
+Optional for development:
+- **pytest** (for running tests)
+- **flake8** or **ruff** (for code linting)
 
-### Pull Requests
+## Setup
 
-1. Fork the repository
-2. Create a feature branch: `git checkout -b feature/my-feature`
-3. Write tests for your change
-4. Ensure all tests pass: `pytest tests/ -v`
-5. Commit with clear message
-6. Open a PR against `main`
+### 1. Fork and Clone
 
-### Code Style
-
-- Python 3.8+
-- Follow PEP 8
-- Add docstrings for all public methods
-- Keep lines under 100 characters
-
-### Testing
-
-All new features must include tests. Run the test suite:
 ```bash
-pytest tests/ -v --tb=short
+git clone https://github.com/YOUR_USERNAME/cellmind.git
+cd cellmind
 ```
 
-Coverage target: 90%+ for new code.
+### 2. Install Dependencies
+
+```bash
+# Create a virtual environment (recommended)
+python -m venv venv
+source venv/bin/activate  # Linux/macOS
+venv\Scriptsctivate   # Windows
+
+# Install in editable mode with dev dependencies
+pip install -e .
+pip install pytest
+```
+
+### 3. Verify Installation
+
+```bash
+python -c "import cellmind; print('CellMind installed successfully')"
+```
+
+## Running Tests
+
+```bash
+pytest tests/ -v
+pytest tests/ -v --cov=. --cov-report=term-missing
+pytest tests/test_cmind.py -v
+```
+
+## Code Style
+
+- Follow **PEP 8** guidelines
+- Maximum line length: **100 characters**
+- Add **docstrings** for all public methods
+- Use **type hints** where appropriate
+
+## Project Structure
+
+```
+cellmind/
+├── cellmind/          # Main package
+│   └── cell_core/     # Core memory engine
+├── tests/             # Test suite
+├── examples/          # Usage examples
+└── docs/              # Documentation
+```
+
+## Submitting Changes
+
+### 1. Create a Branch
+
+```bash
+git checkout -b feature/my-feature
+git checkout -b fix/my-bug-fix
+```
+
+### 2. Make Your Changes
+
+- Write code following the style guidelines
+- Add or update tests
+- Update documentation if needed
+
+### 3. Commit with DCO Sign-off
+
+CellMind uses the **Developer Certificate of Origin (DCO)**.
+
+```bash
+git add .
+git commit -s -m "Add: brief description of changes"
+```
+
+The `-s` flag adds a Signed-off-by line automatically.
+
+### 4. Push and Open PR
+
+```bash
+git push origin feature/my-feature
+```
+
+Then open a Pull Request on GitHub.
+
+## Pull Request Checklist
+
+- [ ] Code follows PEP 8 style guidelines
+- [ ] All tests pass: `pytest tests/ -v`
+- [ ] New code includes tests
+- [ ] Documentation updated if needed
+- [ ] Commit message includes DCO sign-off
+- [ ] PR description explains the change
 
 ## Good First Issues
 
-Look for issues tagged `good first issue`:
+Looking for a place to start? Check these:
+
+- `good first issue` tagged issues — beginner-friendly tasks
 - Fix typos in documentation
 - Add examples to README
 - Write additional tests for untested modules
-- Translate docs to other languages
+- Improve error messages
 
 ## License
 
-By contributing, you agree that your contributions will be licensed under the Apache License 2.0.
+By contributing to CellMind, you agree that your contributions will be licensed under the **Apache License 2.0**.
